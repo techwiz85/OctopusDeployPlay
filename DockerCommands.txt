@@ -1,0 +1,18 @@
+# Lines in this file can be executed at the command prompt in order to start the 
+# OctopusDeploy server container and its dependent container.
+#
+#
+
+docker run -d --isolation=hyperv --env-file .env --name db microsoft/mssql-server-windows-express:9fc5632b15a2
+docker exec db sqlcmd -U sa -P P@ssw0rd! -Q "select 1"
+docker run -d --isolation=hyperv --env-file .env --name od --publish 5441:81 -v "C:/Development/OctopusDeployPlay/Repository:C:/Repository" -v "C:/Development/OctopusDeployPlay/TaskLogs:C:/TaskLogs" octopusdeploy/octopusdeploy:2019.10.5
+
+
+# The following docker commands allows starting of the containers just to connect to cmd for browsing
+docker run -it --isolation=hyperv --env-file .env --name db --entrypoint=cmd --rm microsoft/mssql-server-windows-express:9fc5632b15a2
+
+docker run -it --isolation=hyperv --env-file .env --name od --publish 5441:81 -v "C:/Development/OctopusDeployPlay/Repository:C:/Repository" -v "C:/Development/OctopusDeployPlay/TaskLogs:C:/TaskLogs" --entrypoint=cmd --rm octopusdeploy/octopusdeploy:2019.10.5
+
+
+# Example tenacle docker command - need to change ENV values
+docker run --publish 10931:10933 --tty --interactive --env "ListeningPort=10931" --env "ServerApiKey=API-L9WIFOCOWABUNGAQO6JMZIGWV6HI" --env "TargetEnvironment=Test" --env "TargetRole=app-server" --env "ServerUrl=https://octopus.example.com"  --env "PublicHostNameConfiguration=PublicIp" octopusdeploy/tentacle:3.15.8
