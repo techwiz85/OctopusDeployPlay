@@ -1,7 +1,8 @@
 version: '2.1'
 services:
   db:
-    image: microsoft/mssql-server-windows-express
+    image: microsoft/mssql-server-windows-express:${MSSQL_EXPRESS_VERSION}
+    isolation: hyperv
     environment:
       sa_password: "${SA_PASSWORD}"
       ACCEPT_EULA: "Y"
@@ -11,6 +12,7 @@ services:
       retries: 10
   octopus:
     image: octopusdeploy/octopusdeploy:${OCTOPUS_VERSION}
+    isolation: hyperv
     environment:
       OctopusAdminUsername: "${OCTOPUS_ADMIN_USERNAME}"
       OctopusAdminPassword: "${OCTOPUS_ADMIN_PASSWORD}"
